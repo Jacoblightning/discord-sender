@@ -11,9 +11,13 @@ class ArgumentError(Exception):
     pass
 
 
+class CaptchaError(Exception):
+    pass
+
+
 class DiscordLoginInfo:
     def __init__(
-        self, *, token: str | None = None, cookie: None = None, uid: str | None = None
+            self, *, token: str | None = None, cookie: None = None, uid: str | None = None
     ):
         if not token:  # Keep it until we have cookie auth
             raise ArgumentError("Token must be provided")
@@ -29,7 +33,7 @@ class DiscordLoginInfo:
 
 
 class DiscordUser:
-    DATA = {
+    _DATA = {
         "login": "xxxxx@gmail.com",
         "password": "xxxxx",
         "undelete": False,
@@ -42,23 +46,40 @@ class DiscordUser:
         self.__logged_in: bool = False
         self.session: requests.Session | None = None
 
+    def logged_in(self) -> bool:
+        return self.__logged_in
+
+    def _handle_error(self, resp: requests.Response) -> None:
+        json_data = resp.json()
+        if "hcaptcha" in json_data:
+            errcde = "Please login in a browser first and complete the captcha"
+            if not self.user_info.get_token():
+                errcde += "\nor try token authentication."
+            raise CaptchaError(errcde)
+        try:
+            error: dict[str, str] = json_data["errors"]["login"]["_errors"][0]
+            if error["code"] == "INVALID_LOGIN":
+                raise InvalidCredentialsException(error["message"])
+            else:
+                raise requests.RequestException(
+                    f"Unknown error code from discord. Json data: {json_data}"
+                )
+        except KeyError:
+            raise requests.RequestException(
+                f"Unknown error code from discord. Json data: {json_data}"
+            )
+
     def login_with_credentials(self, email: str, password: str) -> None:
         self.session = requests.Session()
         self.session.get("https://discord.com/login")  # Get required cookie
-        creds = copy.copy(self.DATA)  # Get a copy of the default data
+        creds = copy.copy(self._DATA)  # Get a copy of the default data
         creds["login"] = email
         creds["password"] = password
         response: requests.Response = self.session.post(
             "https://discord.com/api/v9/auth/login", headers={}, json=creds
         )
         if not response.ok:
-            print(response.json())
-            error: dict[str, str] = response.json()["errors"]["login"]["_errors"][0]
-            if error["code"] == "INVALID_LOGIN":
-                raise InvalidCredentialsException(error["message"])
-            raise requests.RequestException(
-                f"Unknown error code from discord: {error['code']}"
-            )
+            self._handle_error(response)
         user_data: dict[str, str | dict[str, str]] = response.json()
         self.user_info = DiscordLoginInfo(
             token=user_data["token"], uid=user_data["user_id"]
