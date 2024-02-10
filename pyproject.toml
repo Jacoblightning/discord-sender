@@ -1,10 +1,14 @@
 [tool.poetry]
 name = "discord-sender"
-version = "1.0.0"
+version = "1.0.1"
 description = "A discord module that lets you send messages as a user"
 authors = ["Jacob <112590190+Jacoblightning@users.noreply.github.com>"]
 license = "Unlicense"
 readme = "README.md"
+homepage = "https://github.com/Jacoblightning/discord-sender"
+repository = "https://github.com/Jacoblightning/discord-sender"
+documentation = "https://github.com/Jacoblightning/discord-sender/blob/main/README.md"
+keywords = ["bot", "discord", "discordbot", "user-bot"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
