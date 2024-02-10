@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "discord-sender"
+version = "0.0.1"
+description = "A discord module that lets you send messages as a user"
+authors = ["Jacob <112590190+Jacoblightning@users.noreply.github.com>"]
+license = "Unlicense"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.1.1"
+isort = "^5.13.2"
+mypy = "^1.8.0"
+pip = "^24.0"
+setuptools = "^69.0.3"
+wheel = "^0.42.0"
+build = "^1.0.3"
+twine = "^4.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
