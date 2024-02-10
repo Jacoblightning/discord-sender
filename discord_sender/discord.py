@@ -1,48 +1,92 @@
 import requests
-
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
-    'Accept': '*/*',
-    'Accept-Language': 'en-US,en;q=0.5',
-    # 'Accept-Encoding': 'gzip, deflate, br',
-    'Content-Type': 'application/json',
-    'X-Super-Properties': 'eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRmlyZWZveCIsImRldmljZSI6IiIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQ7IHJ2OjEyMy4wKSBHZWNrby8yMDEwMDEwMSBGaXJlZm94LzEyMy4wIiwiYnJvd3Nlcl92ZXJzaW9uIjoiMTIzLjAiLCJvc192ZXJzaW9uIjoiMTAiLCJyZWZlcnJlciI6Imh0dHBzOi8vd3d3Lmdvb2dsZS5jb20vIiwicmVmZXJyaW5nX2RvbWFpbiI6Ind3dy5nb29nbGUuY29tIiwic2VhcmNoX2VuZ2luZSI6Imdvb2dsZSIsInJlZmVycmVyX2N1cnJlbnQiOiIiLCJyZWZlcnJpbmdfZG9tYWluX2N1cnJlbnQiOiIiLCJyZWxlYXNlX2NoYW5uZWwiOiJzdGFibGUiLCJjbGllbnRfYnVpbGRfbnVtYmVyIjoyNjQ5MTMsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGx9',
-    'X-Fingerprint': '1205865286134145075.ooL9YeriQ9B_56fJkPSo7nNrbvw',
-    'X-Discord-Locale': 'en-US',
-    'X-Discord-Timezone': 'America/New_York',
-    'X-Debug-Options': 'bugReporterEnabled',
-    'Origin': 'https://discord.com',
-    'DNT': '1',
-    'Sec-GPC': '1',
-    'Connection': 'keep-alive',
-    'Referer': 'https://discord.com/login',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-origin',
-}
-
-DATA = {
-    'login': 'xxxxx@gmail.com',
-    'password': 'xxxxx',
-    'undelete': False,
-    'login_source': None,
-    'gift_code_sku_id': None,
-}
+import copy
 
 
-def login_with_credentials(username: str, password: str):
-    sess = requests.Session()
-    sess.get("https://discord.com/login")  # Get required cookie
-    creds = DATA
-    creds['login'] = username
-    creds['password'] = password.replace('\\', '\\\\')
-    response = sess.post('https://discord.com/api/v9/auth/login', headers=HEADERS, json=creds)
+class InvalidCredentialsException(Exception):
     pass
 
 
-def login_with_token(token):
+class ArgumentError(Exception):
     pass
 
 
-def login_with_cookie(cookie):
-    pass
+class DiscordLoginInfo:
+    def __init__(self, *, token: str = None, cookie=None, uid: str = None):
+        if not token:  # Keep it until we have cookie auth
+            raise ArgumentError("Token must be provided")
+        if not (token or cookie):
+            raise ArgumentError("either token or cookie is required")
+        self.__token = token
+        self.__cookie = cookie
+        self.uid = uid
+        self.preferred_method = "token"
+
+    def get_token(self):
+        return self.__token
+
+
+class DiscordUser:
+    DATA = {
+        "login": "xxxxx@gmail.com",
+        "password": "xxxxx",
+        "undelete": False,
+        "login_source": None,
+        "gift_code_sku_id": None,
+    }
+
+    def __init__(self):
+        self.user_info: DiscordLoginInfo | None = None
+        self.__logged_in: bool = False
+        self.session: requests.Session | None = None
+
+    def login_with_credentials(self, email: str, password: str):
+        self.session = requests.Session()
+        self.session.get("https://discord.com/login")  # Get required cookie
+        creds = copy.copy(self.DATA)  # Get a copy of the default data
+        creds["login"] = email
+        creds["password"] = password
+        response = self.session.post(
+            "https://discord.com/api/v9/auth/login", headers={}, json=creds
+        )
+        if not response.ok:
+            print(response.json())
+            error: dict[str, str] = response.json()["errors"]["login"]["_errors"][0]
+            if error["code"] == "INVALID_LOGIN":
+                raise InvalidCredentialsException(error["message"])
+            raise requests.RequestException(f"Unknown error code from discord: {error['code']}")
+        user_data: dict[str, str | dict[str, str]] = response.json()
+        self.user_info = DiscordLoginInfo(token=user_data["token"], uid=user_data["user_id"])
+        self.__logged_in = True
+
+    def login_with_token(self, token):
+        self.user_info = DiscordLoginInfo(token=token)
+        self.__logged_in = True
+        self.session = requests.Session()
+
+    def login_with_cookie(self, cookie):
+        raise NotImplementedError("Cookie not implemented yet")  # TODO: Figure this out
+
+    def send_message_to_channel(self, message: str, channel_id: str):
+        if not self.__logged_in:
+            raise InvalidCredentialsException("You need to login first")
+        if not self.user_info.__token:
+            raise NotImplementedError("Only token authentication can be used currently")
+        heads = {"Authorization": self.user_info.__token}
+        json_data = {
+            'mobile_network_type': 'unknown',
+            'content': message,
+            'nonce': '0',  # For some reason this works as intended??
+            # https://github.com/discord/discord-api-docs/issues/5607
+            'tts': False,
+            'flags': 0,
+        }
+        self.session.post(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=heads, data=json_data)
+
+    def get_channel_id(self, user_id: str):
+        data = {"recipient_id": user_id}
+        headers = {"authorization": self.user_info.__token}
+        response = requests.post(f'https://discord.com/api/v9/users/@me/channels', json=data, headers=headers)
+        return response.json()['id']
+
+    def send_message_to_user(self, message: str, user_id: str):
+        self.send_message_to_channel(message, self.get_channel_id(user_id))
