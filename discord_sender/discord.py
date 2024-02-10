@@ -52,6 +52,7 @@ class DiscordUser:
             "https://discord.com/api/v9/auth/login", headers={}, json=creds
         )
         if not response.ok:
+            print(response.json())
             error: dict[str, str] = response.json()["errors"]["login"]["_errors"][0]
             if error["code"] == "INVALID_LOGIN":
                 raise InvalidCredentialsException(error["message"])
@@ -75,9 +76,9 @@ class DiscordUser:
     def send_message_to_channel(self, message: str, channel_id: str):
         if not self.__logged_in:
             raise InvalidCredentialsException("You need to login first")
-        if not self.user_info.__token:
+        if not self.user_info.get_token():
             raise NotImplementedError("Only token authentication can be used currently")
-        heads = {"Authorization": self.user_info.__token}
+        heads = {"Authorization": self.user_info.get_token()}
         json_data = {
             "mobile_network_type": "unknown",
             "content": message,
@@ -96,7 +97,7 @@ class DiscordUser:
         if not self.__logged_in:
             raise InvalidCredentialsException("You need to login first")
         data = {"recipient_id": user_id}
-        headers: dict[str, str | None] = {"authorization": self.user_info.__token}
+        headers: dict[str, str | None] = {"authorization": self.user_info.get_token()}
         response = requests.post(
             f"https://discord.com/api/v9/users/@me/channels", json=data, headers=headers
         )
