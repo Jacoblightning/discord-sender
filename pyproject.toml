@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "discord-sender"
-version = "1.0.4"
+version = "1.0.5"
 description = "A discord module that lets you send messages as a user"
 authors = ["Jacob <112590190+Jacoblightning@users.noreply.github.com>"]
 license = "Unlicense"
@@ -11,20 +11,15 @@ documentation = "https://github.com/Jacoblightning/discord-sender/blob/main/READ
 keywords = ["bot", "discord", "discordbot", "user-bot"]
 
 [tool.poetry.dependencies]
-python = "^3.12"
-requests = "^2.31.0"
-pymsgbox = "^1.0.9"
+python = ">=3.6.2"
+requests = "*"
+pymsgbox = "*"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.1"
-isort = "^5.13.2"
-mypy = "^1.8.0"
-pip = "^24.0"
-setuptools = "^69.0.3"
-wheel = "^0.42.0"
-build = "^1.0.3"
-twine = "^4.0.2"
-types-requests = "^2.31.0.20240125"
+black = "*"
+isort = "*"
+mypy = "*"
+types-requests = "*"
 
 [build-system]
 requires = ["poetry-core"]
