@@ -50,3 +50,4 @@ user.user_info.get_token()
 ## For the future
 - [ ] Add cookie authentication
 - [ ] Add sending in servers
+- [ ] Add tests

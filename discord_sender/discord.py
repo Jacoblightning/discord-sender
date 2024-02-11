@@ -1,6 +1,25 @@
 import copy
+import functools
 
 import requests
+
+
+def internet_connection():
+    try:
+        response = requests.get("https://google.com", timeout=5)
+        return True
+    except requests.ConnectionError:
+        return False
+
+
+def patch_get(get):
+    @functools.wraps(get)
+    def wrapper(*args, **kwargs):
+        if not internet_connection():
+            raise requests.ConnectionError("Internet not connected")
+        return get(*args, **kwargs)
+
+    return wrapper
 
 
 class InvalidCredentialsException(Exception):
@@ -71,6 +90,7 @@ class DiscordUser:
 
     def login_with_credentials(self, email: str, password: str) -> None:
         self.session = requests.Session()
+        self.session.get = patch_get(self.session.get)  # Fix internet not connected
         self.session.get("https://discord.com/login")  # Get required cookie
         creds = copy.copy(self._DATA)  # Get a copy of the default data
         creds["login"] = email
@@ -89,7 +109,8 @@ class DiscordUser:
     def login_with_token(self, token) -> None:
         self.user_info = DiscordLoginInfo(token=token)
         self.__logged_in = True
-        self.session = requests.Session()
+        self.session = patch_get()
+        self.session.get = patch_get(self.session.get)
 
     def login_with_cookie(self, cookie: None):
         raise NotImplementedError("Cookie not implemented yet")  # TODO: Figure this out
