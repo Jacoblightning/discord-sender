@@ -34,6 +34,18 @@ class CaptchaError(Exception):
     pass
 
 
+class ChannelNotFoundError(Exception):
+    pass
+
+
+class UnknownUserException(Exception):
+    pass
+
+
+class AlreadyLoggedInException(Exception):
+    pass
+
+
 class DiscordLoginInfo:
     def __init__(
             self, *, token: str | None = None, cookie: None = None, uid: str | None = None
@@ -64,15 +76,16 @@ class DiscordUser:
         self.user_info: DiscordLoginInfo | None = None
         self.__logged_in: bool = False
         self.session: requests.Session | None = None
+        self.auth_method: str | None = None
 
     def logged_in(self) -> bool:
         return self.__logged_in
 
-    def _handle_error(self, resp: requests.Response) -> None:
+    def _handle_error(self, resp: requests.Response, custom_message: str | None = None) -> None:
         json_data = resp.json()
         if "hcaptcha" in json_data:
             errcde = "Please login in a browser first and complete the captcha"
-            if not self.user_info.get_token():
+            if self.auth_method == "cred":
                 errcde += "\nor try token authentication."
             raise CaptchaError(errcde)
         try:
@@ -84,11 +97,25 @@ class DiscordUser:
                     f"Unknown error code from discord. Json data: {json_data}"
                 )
         except KeyError:
+            pass
+        try:
+            error = json_data
+            if error["code"] == "10003":
+                raise ChannelNotFoundError(f"Channel {channel_id} not found")
+            elif resp.status_code == 401 and error["code"] == 0:
+                raise InvalidCredentialsException(error["message"] if not custom_message else custom_message)
+            else:
+                raise requests.RequestException(
+                    f"Unknown error code from discord. Json data: {json_data}"
+                )
+        except KeyError:
             raise requests.RequestException(
                 f"Unknown error code from discord. Json data: {json_data}"
             )
 
-    def login_with_credentials(self, email: str, password: str) -> None:
+    def login_with_credentials(self, email: str, password: str):
+        if self.__logged_in:
+            raise AlreadyLoggedInException("You already logged in")
         self.session = requests.Session()
         self.session.get = patch_get(self.session.get)  # Fix internet not connected
         self.session.get("https://discord.com/login")  # Get required cookie
@@ -105,12 +132,19 @@ class DiscordUser:
             token=user_data["token"], uid=user_data["user_id"]
         )
         self.__logged_in: bool = True
+        return self
 
-    def login_with_token(self, token) -> None:
+    def login_with_token(self, token):
+        if self.__logged_in:
+            raise AlreadyLoggedInException("You already logged in")
+        resp = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": token})
+        if not resp.ok:
+            self._handle_error(resp, "Invalid Token")
         self.user_info = DiscordLoginInfo(token=token)
         self.__logged_in = True
         self.session = requests.Session()
         self.session.get = patch_get(self.session.get)
+        return self
 
     def login_with_cookie(self, cookie: None):
         raise NotImplementedError("Cookie not implemented yet")  # TODO: Figure this out
@@ -119,7 +153,7 @@ class DiscordUser:
         if not self.__logged_in:
             raise InvalidCredentialsException("You need to login first")
         if not self.user_info.get_token():
-            raise NotImplementedError("Only token authentication can be used currently")
+            raise NotImplementedError("Only token or credential authentication can be used currently")
         heads = {"Authorization": self.user_info.get_token()}
         json_data = {
             "mobile_network_type": "unknown",
@@ -129,11 +163,14 @@ class DiscordUser:
             "tts": False,
             "flags": 0,
         }
-        self.session.post(
+        response = self.session.post(
             f"https://discord.com/api/v9/channels/{channel_id}/messages",
             headers=heads,
             data=json_data,
         )
+        if not response.ok:
+            self._handle_error(response)
+        return self
 
     def get_channel_id(self, user_id: str) -> str:
         if not self.__logged_in:
@@ -143,7 +180,10 @@ class DiscordUser:
         response = requests.post(
             f"https://discord.com/api/v9/users/@me/channels", json=data, headers=headers
         )
-        return response.json()["id"]
+        try:
+            return response.json()["id"]
+        except KeyError:
+            raise UnknownUserException(f"User with id {user_id} not found")
 
-    def send_message_to_user(self, message: str, user_id: str) -> None:
-        self.send_message_to_channel(message, self.get_channel_id(user_id))
+    def send_message_to_user(self, message: str, user_id: str):
+        return self.send_message_to_channel(message, self.get_channel_id(user_id))
