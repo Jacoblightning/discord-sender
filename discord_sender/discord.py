@@ -109,7 +109,7 @@ class DiscordUser:
     def login_with_token(self, token) -> None:
         self.user_info = DiscordLoginInfo(token=token)
         self.__logged_in = True
-        self.session = patch_get()
+        self.session = requests.Session()
         self.session.get = patch_get(self.session.get)
 
     def login_with_cookie(self, cookie: None):
