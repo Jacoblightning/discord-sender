@@ -1,7 +1,13 @@
 import copy
 import functools
+import warnings
 
 import requests
+
+from .discord_exceptions import *
+from .channel import Channel
+from .other import OtherUser
+from .info import DiscordLoginInfo
 
 
 def internet_connection():
@@ -22,47 +28,6 @@ def patch_get(get):
     return wrapper
 
 
-class InvalidCredentialsException(Exception):
-    pass
-
-
-class ArgumentError(Exception):
-    pass
-
-
-class CaptchaError(Exception):
-    pass
-
-
-class ChannelNotFoundError(Exception):
-    pass
-
-
-class UnknownUserException(Exception):
-    pass
-
-
-class AlreadyLoggedInException(Exception):
-    pass
-
-
-class DiscordLoginInfo:
-    def __init__(
-            self, *, token: str | None = None, cookie: None = None, uid: str | None = None
-    ):
-        if not token:  # Keep it until we have cookie auth
-            raise ArgumentError("Token must be provided")
-        if not (token or cookie):
-            raise ArgumentError("either token or cookie is required")
-        self.__token: str | None = token
-        self.__cookie: None = cookie
-        self.uid: str | None = uid
-        self.preferred_method: str = "token"
-
-    def get_token(self) -> str | None:
-        return self.__token
-
-
 class DiscordUser:
     _DATA = {
         "login": "xxxxx@gmail.com",
@@ -81,7 +46,43 @@ class DiscordUser:
     def logged_in(self) -> bool:
         return self.__logged_in
 
-    def _handle_error(self, resp: requests.Response, custom_message: str | None = None) -> None:
+    def get_dms(self, format_type: int = 1):
+        if not self.__logged_in:
+            raise InvalidCredentialsException("You are not logged in")
+        heads = {"Authorization": self.user_info.get_token()}
+        response = self.session.get(
+            "https://discord.com/api/v9/users/@me/channels", headers=heads
+        )
+        if not response.ok:
+            self._handle_error(response)
+        if format_type == 1:
+            return response.json()
+        dms = []
+        json: list[
+            dict[str, str | int | list[dict[str, int | str | None | bool]]]
+        ] = response.json()
+        for channel in json:
+            dms.append(
+                Channel(
+                    channel["id"],
+                    [
+                        OtherUser(
+                            user_id=other["id"],
+                            global_name=other.get("global_name"),
+                            username=other.get("username"),
+                            is_bot=other.get("bot", False),
+                        )
+                        for other in channel["recipients"]
+                    ],
+                    chan_type=channel["type"],
+                    name=channel.get("name", None),
+                )
+            )
+        return dms
+
+    def _handle_error(
+            self, resp: requests.Response, custom_message: str | None = None
+    ) -> None:
         json_data = resp.json()
         if "hcaptcha" in json_data:
             errcde = "Please login in a browser first and complete the captcha"
@@ -100,10 +101,16 @@ class DiscordUser:
             pass
         try:
             error = json_data
-            if error["code"] == "10003":
+            if error["code"] == 10003:
                 raise ChannelNotFoundError(f"Channel {channel_id} not found")
             elif resp.status_code == 401 and error["code"] == 0:
-                raise InvalidCredentialsException(error["message"] if not custom_message else custom_message)
+                raise InvalidCredentialsException(
+                    error["message"] if not custom_message else custom_message
+                )
+            elif error["code"] == 50001:
+                raise InvalidCredentialsException(
+                    "You do not have permission to send a message in this channel"
+                )
             else:
                 raise requests.RequestException(
                     f"Unknown error code from discord. Json data: {json_data}"
@@ -131,13 +138,15 @@ class DiscordUser:
         self.user_info = DiscordLoginInfo(
             token=user_data["token"], uid=user_data["user_id"]
         )
-        self.__logged_in: bool = True
+        self.__logged_in = True
         return self
 
     def login_with_token(self, token):
         if self.__logged_in:
             raise AlreadyLoggedInException("You already logged in")
-        resp = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": token})
+        resp = requests.get(
+            "https://discord.com/api/v9/users/@me", headers={"Authorization": token}
+        )
         if not resp.ok:
             self._handle_error(resp, "Invalid Token")
         self.user_info = DiscordLoginInfo(token=token)
@@ -153,7 +162,9 @@ class DiscordUser:
         if not self.__logged_in:
             raise InvalidCredentialsException("You need to login first")
         if not self.user_info.get_token():
-            raise NotImplementedError("Only token or credential authentication can be used currently")
+            raise NotImplementedError(
+                "Only token or credential authentication can be used currently"
+            )
         heads = {"Authorization": self.user_info.get_token()}
         json_data = {
             "mobile_network_type": "unknown",
@@ -187,3 +198,42 @@ class DiscordUser:
 
     def send_message_to_user(self, message: str, user_id: str):
         return self.send_message_to_channel(message, self.get_channel_id(user_id))
+
+    def send_message_to_username(self, message: str, username: str):
+        warnings.warn("Username support is still experimental")
+        dms: list[Channel] = self.get_dms(2)
+        for dm in dms:
+            to: OtherUser | list[OtherUser] = dm.recipients
+            if isinstance(to, OtherUser):
+                to: list[OtherUser] = [to]
+            for user in to:
+                if user.username == username:
+                    return self.send_message_to_user(message, user.user_id)
+
+    def get_channel_info(self, channel_id: str):
+        warnings.warn("Channel info is still experimental")
+        channels: list[Channel] = self.get_dms(2)
+        for channel in channels:
+            if channel.channel_id == channel_id:
+                return channel
+
+    def get_user_info_by_id(self, user_id: str):
+        warnings.warn("It is recommended to use get_dms to get the info of a user as this function calls that "
+                      "internally")
+        return self._do_user_check(lambda user: user.user_id == user_id)
+
+    def get_user_info_by_username(self, username: str):
+        warnings.warn("Username support is still experimental")
+        warnings.warn("It is recommended to use get_dms to get the info of a user as this function calls that "
+                      "internally")
+        return self._do_user_check(lambda user: user.username == username)
+
+    def _do_user_check(self, checker: function):
+        dms: list[Channel] = self.get_dms(2)
+        for dm in dms:
+            to: OtherUser | list[OtherUser] = dm.recipients
+            if isinstance(to, OtherUser):
+                to: list[OtherUser] = [to]
+            for user in to:
+                if checker(user):
+                    return user

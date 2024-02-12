@@ -12,4 +12,6 @@ if "--accept-eula" in sys.argv:
     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
     print("The eula was successfully accepted")
     sys.exit(0)
-print("usage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails.")
+print(
+    "usage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails."
+)

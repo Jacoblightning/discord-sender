@@ -24,8 +24,9 @@ user.login_with_token(<token>)
 user.login_with_credentials(<email>, <password>)
 ```
 ### Send a message
+
 ```python
-user.send_message_to_user(<message>, <user id of recipient>)
+user.send_message_to_userID(<message>, <user id of recipient>)
 ```
 ## Other commands
 ### Check if user is logged in
@@ -34,6 +35,7 @@ if user.logged_in():
     do_stuff()
 ```
 ### Send a message to a channel id
+#### Also works in servers
 ```python
 user.send_message_to_channel(<message>, <channel id>)
 ```
@@ -47,7 +49,28 @@ user.get_channel_id(<user id of recipient>)
 # Returns None if not logged in
 user.user_info.get_token()
 ```
+### Get dms
+```python
+user.get_dms(<nice formatting, True or False>)
+```
+### Get user info by id
+```python
+user.get_user_info_by_id(<user id>)
+```
+## Experimental:
+### Send message to username
+```python
+user.send_message_to_username(<message>, <username>)
+```
+### Get channel info
+```python
+user.get_channel_info(<channel id>)
+```
+### Get user info by username
+```python
+user.get_user_info_by_username(<username>)
+```
 ## For the future
 - [ ] Add cookie authentication
-- [ ] Add sending in servers
+- [X] Add sending in servers
 - [ ] Add tests

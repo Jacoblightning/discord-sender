@@ -14,20 +14,26 @@ def internet_connection():
 
 def _tk_warning():
     if (
-            pymsgbox.confirm(
-                "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the only "
-                "time this is asked.",
-                buttons=["Yes, I accept", "No"],
-            )
-            == "No"
+        pymsgbox.confirm(
+            "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the only "
+            "time this is asked.",
+            buttons=["Yes, I accept", "No"],
+        )
+        == "No"
     ):
         exit(0)
     _eula_accepted()
 
 
 def _term_warning():
-    if not input("This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
-                 "only time this is asked. [N/y]").lower().startswith("y"):
+    if (
+        not input(
+            "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
+            "only time this is asked. [N/y]"
+        )
+        .lower()
+        .startswith("y")
+    ):
         exit(0)
     _eula_accepted()
 
@@ -51,9 +57,11 @@ if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
         try:
             _term_warning()
         except Exception:
-            print("You cannot use this program until you have accepted the eula but there was an error writing the "
-                  "config file.\n To continue, please run \"python -m discord_sender --accept-eula\" as "
-                  "administrator/root")
+            print(
+                "You cannot use this program until you have accepted the eula but there was an error writing the "
+                'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
+                "administrator/root"
+            )
     # if not internet_connection():
     #     warnings.warn("The internet is not connected.")
     #     print("The internet is not connected.", file=sys.stderr)
