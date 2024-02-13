@@ -46,7 +46,10 @@ class DiscordUser:
     def logged_in(self) -> bool:
         return self.__logged_in
 
-    def get_dms(self, format_type: int = 1):
+    def get_dms(self, format_type: bool | int = True):
+        if isinstance(format_type, int):
+            warnings.warn("Passing int to get_dms is Deprecated and will soon be removed", DeprecationWarning)  # TODO: Remove passing an int.
+            format_type = False if format_type == 1 else True
         if not self.__logged_in:
             raise InvalidCredentialsException("You are not logged in")
         heads = {"Authorization": self.user_info.get_token()}
@@ -55,7 +58,7 @@ class DiscordUser:
         )
         if not response.ok:
             self._handle_error(response)
-        if format_type == 1:
+        if format_type == False:
             return response.json()
         dms = []
         json: list[
@@ -201,7 +204,7 @@ class DiscordUser:
 
     def send_message_to_username(self, message: str, username: str):
         warnings.warn("Username support is still experimental")
-        dms: list[Channel] = self.get_dms(2)
+        dms: list[Channel] = self.get_dms(True)
         for dm in dms:
             to: OtherUser | list[OtherUser] = dm.recipients
             if isinstance(to, OtherUser):
@@ -212,7 +215,7 @@ class DiscordUser:
 
     def get_channel_info(self, channel_id: str):
         warnings.warn("Channel info is still experimental")
-        channels: list[Channel] = self.get_dms(2)
+        channels: list[Channel] = self.get_dms(True)
         for channel in channels:
             if channel.channel_id == channel_id:
                 return channel
@@ -229,7 +232,7 @@ class DiscordUser:
         return self._do_user_check(lambda user: user.username == username)
 
     def _do_user_check(self, checker: function):
-        dms: list[Channel] = self.get_dms(2)
+        dms: list[Channel] = self.get_dms(True)
         for dm in dms:
             to: OtherUser | list[OtherUser] = dm.recipients
             if isinstance(to, OtherUser):
