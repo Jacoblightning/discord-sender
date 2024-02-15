@@ -7,6 +7,9 @@ if "--accept-eula" in sys.argv:
         "other": os.path.expanduser("~/.config/discord-sender"),
     }
     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+    if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+        if not os.path.exists(cfg):
+            os.mkdir(cfg)
     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
         pass
     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
