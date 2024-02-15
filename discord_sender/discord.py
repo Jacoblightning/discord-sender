@@ -4,15 +4,15 @@ import warnings
 
 import requests
 
-from .discord_exceptions import *
 from .channel import Channel
-from .other import OtherUser
+from .discord_exceptions import *
 from .info import DiscordLoginInfo
+from .other import OtherUser
 
 
 def internet_connection():
     try:
-        response = requests.get("https://google.com", timeout=5)
+        requests.get("https://google.com", timeout=5)
         return True
     except requests.ConnectionError:
         return False
@@ -46,9 +46,16 @@ class DiscordUser:
     def logged_in(self) -> bool:
         return self.__logged_in
 
+    def _set_logged_in(self, logged_in: bool):
+        warnings.warn("This method snould not be used outside of tests.")
+        self.__logged_in = logged_in
+
     def get_dms(self, format_type: bool | int = True):
-        if isinstance(format_type, int):
-            warnings.warn("Passing int to get_dms is Deprecated and will soon be removed", DeprecationWarning)  # TODO: Remove passing an int.
+        if isinstance(format_type, int) and not isinstance(format_type, bool):
+            warnings.warn(
+                "Passing int to get_dms is Deprecated and will soon be removed",
+                DeprecationWarning,
+            )  # TODO: Remove passing an int.
             format_type = False if format_type == 1 else True
         if not self.__logged_in:
             raise InvalidCredentialsException("You are not logged in")
@@ -58,12 +65,12 @@ class DiscordUser:
         )
         if not response.ok:
             self._handle_error(response)
-        if format_type == False:
+        if not format_type:
             return response.json()
         dms = []
-        json: list[
-            dict[str, str | int | list[dict[str, int | str | None | bool]]]
-        ] = response.json()
+        json: list[dict[str, str | int | list[dict[str, int | str | None | bool]]]] = (
+            response.json()
+        )
         for channel in json:
             dms.append(
                 Channel(
@@ -84,7 +91,7 @@ class DiscordUser:
         return dms
 
     def _handle_error(
-            self, resp: requests.Response, custom_message: str | None = None
+        self, resp: requests.Response, custom_message: str | None = None
     ) -> None:
         json_data = resp.json()
         if "hcaptcha" in json_data:
@@ -105,7 +112,7 @@ class DiscordUser:
         try:
             error = json_data
             if error["code"] == 10003:
-                raise ChannelNotFoundError(f"Channel {channel_id} not found")
+                raise ChannelNotFoundError(f"Channel not found")
             elif resp.status_code == 401 and error["code"] == 0:
                 raise InvalidCredentialsException(
                     error["message"] if not custom_message else custom_message
@@ -221,17 +228,21 @@ class DiscordUser:
                 return channel
 
     def get_user_info_by_id(self, user_id: str):
-        warnings.warn("It is recommended to use get_dms to get the info of a user as this function calls that "
-                      "internally")
+        warnings.warn(
+            "It is recommended to use get_dms to get the info of a user as this function calls that "
+            "internally"
+        )
         return self._do_user_check(lambda user: user.user_id == user_id)
 
     def get_user_info_by_username(self, username: str):
         warnings.warn("Username support is still experimental")
-        warnings.warn("It is recommended to use get_dms to get the info of a user as this function calls that "
-                      "internally")
+        warnings.warn(
+            "It is recommended to use get_dms to get the info of a user as this function calls that "
+            "internally"
+        )
         return self._do_user_check(lambda user: user.username == username)
 
-    def _do_user_check(self, checker: function):
+    def _do_user_check(self, checker):
         dms: list[Channel] = self.get_dms(True)
         for dm in dms:
             to: OtherUser | list[OtherUser] = dm.recipients

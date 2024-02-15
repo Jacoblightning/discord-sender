@@ -1,15 +1,7 @@
 import os
 
-import requests
 import pymsgbox
-
-
-def internet_connection():
-    try:
-        requests.get("https://google.com", timeout=5)
-        return True
-    except requests.ConnectionError:
-        return False
+import requests
 
 
 def _tk_warning():
@@ -62,7 +54,4 @@ if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
                 'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
                 "administrator/root"
             )
-    # if not internet_connection():
-    #     warnings.warn("The internet is not connected.")
-    #     print("The internet is not connected.", file=sys.stderr)
-    from . import discord
+            exit(1)

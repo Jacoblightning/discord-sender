@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 if "--accept-eula" in sys.argv:
     CONFIG = {
