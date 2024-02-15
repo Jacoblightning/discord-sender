@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "discord-sender"
-version = "2.0.2"
+version = "2.0.3"
 description = "A discord module that lets you send messages as a user"
 authors = ["Jacob <112590190+Jacoblightning@users.noreply.github.com>"]
 license = "Unlicense"
