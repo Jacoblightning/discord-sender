@@ -479,16 +479,6 @@ files = [
 ]
 
 [[package]]
-name = "pymsgbox"
-version = "1.0.9"
-description = "A simple, cross-platform, pure Python module for JavaScript-like message boxes."
-optional = false
-python-versions = "*"
-files = [
-    {file = "PyMsgBox-1.0.9.tar.gz", hash = "sha256:2194227de8bff7a3d6da541848705a155dcbb2a06ee120d9f280a1d7f51263ff"},
-]
-
-[[package]]
 name = "pytest"
 version = "8.0.0"
 description = "pytest: simple powerful testing with Python"
@@ -608,5 +598,5 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.8"
-content-hash = "dd9834ec6b0fef22e2eaa90b2b581ddf10c385994e9014bc434536afe60d49cf"
+python-versions = ">=3.10"
+content-hash = "fa844afa2dbdcf24e25c1a3ad70c8ba7749b93e1596bf8b211f55e77307b6c54"

@@ -11,9 +11,8 @@ documentation = "https://github.com/Jacoblightning/discord-sender/blob/main/READ
 keywords = ["bot", "discord", "discordbot", "user-bot"]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.10"
 requests = "*"
-pymsgbox = "*"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
