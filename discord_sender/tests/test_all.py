@@ -3,8 +3,8 @@ from unittest import mock
 import pytest
 import requests
 
-from ..discord_sender import (channel, discord, discord_exceptions, info,
-                              other, tools)
+from discord_sender import (channel, discord, discord_exceptions, info,
+                            other, tools)
 
 
 @pytest.fixture()
