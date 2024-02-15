@@ -1,6 +1,5 @@
 import os
 
-import pymsgbox
 import requests
 import sys
 
