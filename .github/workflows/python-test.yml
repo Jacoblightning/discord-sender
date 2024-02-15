@@ -29,6 +29,9 @@ jobs:
         python -m pip install --upgrade pip poetry
         poetry install
         poetry run python -m pip install pytest
+    - name: Check poetry works
+      run: |
+        poetry check
     - name: Accept EULA
       run: |
         poetry run python -m discord_sender --accept-eula

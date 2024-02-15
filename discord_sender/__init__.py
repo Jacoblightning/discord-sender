@@ -1,26 +1,23 @@
 import os
-
-import requests
 import sys
 
 if "--accept-eula" not in sys.argv:
+
     def _term_warning():
         if (
-                not input(
-                    "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
-                    "only time this is asked. [N/y]"
-                )
-                        .lower()
-                        .startswith("y")
+            not input(
+                "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
+                "only time this is asked. [N/y]"
+            )
+            .lower()
+            .startswith("y")
         ):
             exit(0)
         _eula_accepted()
 
-
     def _eula_accepted():
         with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
             pass
-
 
     CONFIG = {
         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
