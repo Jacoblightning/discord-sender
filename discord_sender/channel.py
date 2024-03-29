@@ -20,19 +20,20 @@ class Channel:
         if chan_type == 1:
             self.channel_type: str = "DM"
         elif chan_type == 3:
-            self.channel_type: str = "group"
+            self.channel_type: str = None
         else:
             self.channel_type: str = "unknown"
 
-    def strict_equality_check(self, other):
+    @staticmethod
+    def strict_equality_check(first, second):
         try:
-            if self != other:
+            if first != second:
                 return False
-            if self.to != other.to:
+            if first.to != second.to:
                 return False
-            if self.name != other.name:
+            if first.name != second.name:
                 return False
-            if self.channel_type != other.channel_type:
+            if first.channel_type != second.channel_type:
                 return False
             return True
         except AttributeError:

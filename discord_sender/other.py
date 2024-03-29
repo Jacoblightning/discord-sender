@@ -14,7 +14,7 @@ class OtherUser:
     def __repr__(self):
         return f"{self.user_id}: {self.username}{('/' + self.global_name) if self.global_name else ''}"
 
-    def strict_equality_check(self, other) -> bool:
+    def strict_equality_check(self, other) -> bool:  # TODO: Cover this
         try:
             if self != other:
                 return False
@@ -24,7 +24,7 @@ class OtherUser:
         except AttributeError:
             return False
 
-    def __eq__(self, other):
+    def __eq__(self, other):  # TODO: Cover this
         try:
             if not isinstance(other, OtherUser):
                 return False

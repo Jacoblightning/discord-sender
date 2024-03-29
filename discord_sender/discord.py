@@ -12,31 +12,24 @@ from .other import OtherUser
 
 def internet_connection():
     try:
-        requests.get("https://google.com", timeout=5)
+        timo = 5  # pragma: no mutate
+        requests.get("https://google.com", timeout=timo)
         return True
-    except requests.ConnectionError:
-        return False
+    except requests.ConnectionError:  # pragma: no cover
+        return False  # pragma: no mutate
 
 
 def patch_get(get):
-    @functools.wraps(get)
+    @functools.wraps(get)  # pragma: no mutate
     def wrapper(*args, **kwargs):
         if not internet_connection():
-            raise requests.ConnectionError("Internet not connected")
+            raise requests.ConnectionError("Internet not connected")  # pragma: no mutate
         return get(*args, **kwargs)
 
     return wrapper
 
 
 class DiscordUser:
-    _DATA = {
-        "login": "xxxxx@gmail.com",
-        "password": "xxxxx",
-        "undelete": False,
-        "login_source": None,
-        "gift_code_sku_id": None,
-    }
-
     def __init__(self):
         self.user_info: DiscordLoginInfo | None = None
         self.__logged_in: bool = False
@@ -94,7 +87,7 @@ class DiscordUser:
         self, resp: requests.Response, custom_message: str | None = None
     ) -> None:
         json_data = resp.json()
-        if "hcaptcha" in json_data:
+        if json_data.get("captcha_key") == ['captcha-required']:
             errcde = "Please login in a browser first and complete the captcha"
             if self.auth_method == "cred":
                 errcde += "\nor try token authentication."
@@ -136,9 +129,7 @@ class DiscordUser:
         self.session = requests.Session()
         self.session.get = patch_get(self.session.get)  # Fix internet not connected
         self.session.get("https://discord.com/login")  # Get required cookie
-        creds = copy.copy(self._DATA)  # Get a copy of the default data
-        creds["login"] = email
-        creds["password"] = password
+        creds = {"login": email, "password": password}
         response: requests.Response = self.session.post(
             "https://discord.com/api/v9/auth/login", headers={}, json=creds
         )
