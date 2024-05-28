@@ -1,0 +1,12 @@
+<html><body><h1>discord_sender/channel.py</h1>Killed 2 out of 3 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 312</h3><pre>--- discord_sender/channel.py
++++ discord_sender/channel.py
+@@ -12,7 +12,7 @@
+             name: str | None = None,
+             parent=None
+     ):
+-        self.__parent = parent
++        self.__parent = None
+         self.channel_id: str = channel_id
+         self.is_in_server: bool = is_in_server
+         self.recipients: list[OtherUser] = recipients
+</pre></body></html>

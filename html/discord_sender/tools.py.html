@@ -1,0 +1,17 @@
+<html><body><h1>discord_sender/tools.py</h1>Killed 1 out of 3 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 253</h3><pre>--- discord_sender/tools.py
++++ discord_sender/tools.py
+@@ -1,4 +1,4 @@
+-def ziplist(list1, list2, checkeq=lambda x, y: x == y):
++def ziplist(list1, list2, checkeq=lambda x, y: x != y):
+     zipped = []
+     for i in list1:
+         for j in list2:
+</pre><h3>Mutant 254</h3><pre>--- discord_sender/tools.py
++++ discord_sender/tools.py
+@@ -1,4 +1,4 @@
+-def ziplist(list1, list2, checkeq=lambda x, y: x == y):
++def ziplist(list1, list2, checkeq=lambda x, y: None):
+     zipped = []
+     for i in list1:
+         for j in list2:
+</pre></body></html>

@@ -1,0 +1,288 @@
+<html><body><h1>discord_sender/__init__.py</h1>Killed 0 out of 26 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 256</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-if "--accept-eula" not in sys.argv:
++if "XX--accept-eulaXX" not in sys.argv:
+ 
+     def _term_warning():
+         if (
+</pre><h3>Mutant 257</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-if "--accept-eula" not in sys.argv:
++if "--accept-eula"  in sys.argv:
+ 
+     def _term_warning():
+         if (
+</pre><h3>Mutant 258</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -5,7 +5,7 @@
+ 
+     def _term_warning():
+         if (
+-            not input(
++             input(
+                 "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
+                 "only time this is asked. [N/y]"
+             )
+</pre><h3>Mutant 259</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -6,7 +6,7 @@
+     def _term_warning():
+         if (
+             not input(
+-                "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
++                "XXThis program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the XX"
+                 "only time this is asked. [N/y]"
+             )
+             .lower()
+</pre><h3>Mutant 260</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -7,7 +7,7 @@
+         if (
+             not input(
+                 "This program breaks Discords TOS.\nPress yes to aknowledge all responsibility\nThis will be the "
+-                "only time this is asked. [N/y]"
++                "XXonly time this is asked. [N/y]XX"
+             )
+             .lower()
+             .startswith("y")
+</pre><h3>Mutant 261</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -10,7 +10,7 @@
+                 "only time this is asked. [N/y]"
+             )
+             .lower()
+-            .startswith("y")
++            .startswith("XXyXX")
+         ):
+             exit(0)
+         _eula_accepted()
+</pre><h3>Mutant 262</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -12,7 +12,7 @@
+             .lower()
+             .startswith("y")
+         ):
+-            exit(0)
++            exit(1)
+         _eula_accepted()
+ 
+     def _eula_accepted():
+</pre><h3>Mutant 263</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -16,7 +16,7 @@
+         _eula_accepted()
+ 
+     def _eula_accepted():
+-        with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
++        with open(os.path.join(cfg, "XX.eulaacceptedXX"), "a") as f:
+             pass
+ 
+     CONFIG = {
+</pre><h3>Mutant 264</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -16,7 +16,7 @@
+         _eula_accepted()
+ 
+     def _eula_accepted():
+-        with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
++        with open(os.path.join(cfg, ".eulaaccepted"), "XXaXX") as f:
+             pass
+ 
+     CONFIG = {
+</pre><h3>Mutant 265</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -20,7 +20,7 @@
+             pass
+ 
+     CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
++        "XXntXX": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+</pre><h3>Mutant 266</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -20,7 +20,7 @@
+             pass
+ 
+     CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
++        "nt": os.path.expanduser("XX~\\AppData\\Local\\discord-senderXX"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+</pre><h3>Mutant 267</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -21,7 +21,7 @@
+ 
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
++        "XXotherXX": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+</pre><h3>Mutant 268</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -21,7 +21,7 @@
+ 
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
++        "other": os.path.expanduser("XX~/.config/discord-senderXX"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+</pre><h3>Mutant 269</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -19,10 +19,7 @@
+         with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+             pass
+ 
+-    CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
+-    }
++    CONFIG = None
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+</pre><h3>Mutant 270</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -23,7 +23,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["XXntXX"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 271</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -23,7 +23,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name != "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 272</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -23,7 +23,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name == "XXntXX" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 273</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -23,7 +23,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["XXotherXX"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 274</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -23,7 +23,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = None
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 275</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -24,7 +24,7 @@
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+-    if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
++    if  os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+         try:
+</pre><h3>Mutant 276</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -24,7 +24,7 @@
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+-    if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
++    if not os.path.exists(os.path.join(cfg, "XX.eulaacceptedXX")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+         try:
+</pre><h3>Mutant 277</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -25,7 +25,7 @@
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+-        if not os.path.exists(cfg):
++        if  os.path.exists(cfg):
+             os.mkdir(cfg)
+         try:
+             _term_warning()
+</pre><h3>Mutant 278</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -31,7 +31,7 @@
+             _term_warning()
+         except Exception:
+             print(
+-                "You cannot use this program until you have accepted the eula but there was an error writing the "
++                "XXYou cannot use this program until you have accepted the eula but there was an error writing the XX"
+                 'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
+                 "administrator/root"
+             )
+</pre><h3>Mutant 279</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -32,7 +32,7 @@
+         except Exception:
+             print(
+                 "You cannot use this program until you have accepted the eula but there was an error writing the "
+-                'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
++                'XXconfig file.\n To continue, please run "python -m discord_sender --accept-eula" as XX'
+                 "administrator/root"
+             )
+             exit(1)
+</pre><h3>Mutant 280</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -33,7 +33,7 @@
+             print(
+                 "You cannot use this program until you have accepted the eula but there was an error writing the "
+                 'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
+-                "administrator/root"
++                "XXadministrator/rootXX"
+             )
+             exit(1)
+ 
+</pre><h3>Mutant 281</h3><pre>--- discord_sender/__init__.py
++++ discord_sender/__init__.py
+@@ -35,5 +35,5 @@
+                 'config file.\n To continue, please run "python -m discord_sender --accept-eula" as '
+                 "administrator/root"
+             )
+-            exit(1)
++            exit(2)
+ 
+</pre></body></html>

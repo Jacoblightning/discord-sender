@@ -1,4 +1,5 @@
 import copy
+import datetime
 import functools
 import warnings
 
@@ -8,6 +9,7 @@ from .channel import Channel
 from .discord_exceptions import *
 from .info import DiscordLoginInfo
 from .other import OtherUser
+from .messages import Message
 
 
 def internet_connection():
@@ -51,7 +53,7 @@ class DiscordUser:
             )  # TODO: Remove passing an int.
             format_type = False if format_type == 1 else True
         if not self.__logged_in:
-            raise InvalidCredentialsException("You are not logged in")
+            raise InvalidCredentialsException("XXYou are not logged inXX")
         heads = {"Authorization": self.user_info.get_token()}
         response = self.session.get(
             "https://discord.com/api/v9/users/@me/channels", headers=heads
@@ -79,12 +81,46 @@ class DiscordUser:
                     ],
                     chan_type=channel["type"],
                     name=channel.get("name", None),
+                    parent=self
                 )
             )
         return dms
 
+    def get_messages(self, chan_id: str, max_num: int = 50, nice_formatting: bool = True):
+        if not self.__logged_in:
+            raise InvalidCredentialsException("You are not logged in")
+        heads = {"Authorization": self.user_info.get_token()}
+        response = self.session.get(
+            f"https://discord.com/api/v9/channels/{chan_id}/messages?limit={max_num}", headers=heads
+        )
+        if not response.ok:
+            self._handle_error(response)
+        messages: list[dict] = response.json()
+        if not nice_formatting:
+            return messages
+        messages_list = []
+        for message in messages:
+            if "call" in message:
+                continue
+            messages_list.append(
+                Message(
+                    message["content"],
+                    datetime.datetime.fromisoformat(message["timestamp"]),
+                    OtherUser(
+                        user_id=message["author"]["id"],
+                        global_name=message["author"].get("global_name"),
+                        username=message["author"].get("username"),
+                        is_bot=message["author"].get("bot", False)
+                    ),  # if message["id"] != self.user_info.uid
+                    self.get_channel_info(message["channel_id"]),
+                    None,
+                    message["id"]
+                )
+            )
+        return messages_list
+
     def _handle_error(
-        self, resp: requests.Response, custom_message: str | None = None
+            self, resp: requests.Response, custom_message: str | None = None
     ) -> None:
         json_data = resp.json()
         if json_data.get("captcha_key") == ['captcha-required']:

@@ -1,0 +1,245 @@
+<html><body><h1>discord_sender/__main__.py</h1>Killed 0 out of 22 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 282</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-if "--accept-eula" in sys.argv:
++if "XX--accept-eulaXX" in sys.argv:
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+</pre><h3>Mutant 283</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-if "--accept-eula" in sys.argv:
++if "--accept-eula" not in sys.argv:
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+</pre><h3>Mutant 284</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -3,7 +3,7 @@
+ 
+ if "--accept-eula" in sys.argv:
+     CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
++        "XXntXX": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+</pre><h3>Mutant 285</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -3,7 +3,7 @@
+ 
+ if "--accept-eula" in sys.argv:
+     CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
++        "nt": os.path.expanduser("XX~\\AppData\\Local\\discord-senderXX"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+</pre><h3>Mutant 286</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -4,7 +4,7 @@
+ if "--accept-eula" in sys.argv:
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
++        "XXotherXX": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+</pre><h3>Mutant 287</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -4,7 +4,7 @@
+ if "--accept-eula" in sys.argv:
+     CONFIG = {
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
++        "other": os.path.expanduser("XX~/.config/discord-senderXX"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+</pre><h3>Mutant 288</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -2,10 +2,7 @@
+ import sys
+ 
+ if "--accept-eula" in sys.argv:
+-    CONFIG = {
+-        "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+-        "other": os.path.expanduser("~/.config/discord-sender"),
+-    }
++    CONFIG = None
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+</pre><h3>Mutant 289</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -6,7 +6,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["XXntXX"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 290</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -6,7 +6,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name != "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 291</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -6,7 +6,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name == "XXntXX" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 292</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -6,7 +6,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["XXotherXX"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 293</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -6,7 +6,7 @@
+         "nt": os.path.expanduser("~\\AppData\\Local\\discord-sender"),
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+-    cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
++    cfg = None
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+</pre><h3>Mutant 294</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -7,7 +7,7 @@
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+-    if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
++    if  os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+</pre><h3>Mutant 295</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -7,7 +7,7 @@
+         "other": os.path.expanduser("~/.config/discord-sender"),
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+-    if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
++    if not os.path.exists(os.path.join(cfg, "XX.eulaacceptedXX")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+</pre><h3>Mutant 296</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -8,7 +8,7 @@
+     }
+     cfg = CONFIG["nt"] if os.name == "nt" else CONFIG["other"]
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+-        if not os.path.exists(cfg):
++        if  os.path.exists(cfg):
+             os.mkdir(cfg)
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+         pass
+</pre><h3>Mutant 297</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -10,7 +10,7 @@
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+-    with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
++    with open(os.path.join(cfg, "XX.eulaacceptedXX"), "a") as f:
+         pass
+     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
+     print("The eula was successfully accepted")
+</pre><h3>Mutant 298</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -10,7 +10,7 @@
+     if not os.path.exists(os.path.join(cfg, ".eulaaccepted")):
+         if not os.path.exists(cfg):
+             os.mkdir(cfg)
+-    with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
++    with open(os.path.join(cfg, ".eulaaccepted"), "XXaXX") as f:
+         pass
+     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
+     print("The eula was successfully accepted")
+</pre><h3>Mutant 299</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -12,7 +12,7 @@
+             os.mkdir(cfg)
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+         pass
+-    os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
++    os.chmod(os.path.join(cfg, "XX.eulaacceptedXX"), 0o777)
+     print("The eula was successfully accepted")
+     sys.exit(0)
+ print(
+</pre><h3>Mutant 300</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -12,7 +12,7 @@
+             os.mkdir(cfg)
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+         pass
+-    os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
++    os.chmod(os.path.join(cfg, ".eulaaccepted"), 512)
+     print("The eula was successfully accepted")
+     sys.exit(0)
+ print(
+</pre><h3>Mutant 301</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -13,7 +13,7 @@
+     with open(os.path.join(cfg, ".eulaaccepted"), "a") as f:
+         pass
+     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
+-    print("The eula was successfully accepted")
++    print("XXThe eula was successfully acceptedXX")
+     sys.exit(0)
+ print(
+     "usage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails."
+</pre><h3>Mutant 302</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -14,7 +14,7 @@
+         pass
+     os.chmod(os.path.join(cfg, ".eulaaccepted"), 0o777)
+     print("The eula was successfully accepted")
+-    sys.exit(0)
++    sys.exit(1)
+ print(
+     "usage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails."
+ )
+</pre><h3>Mutant 303</h3><pre>--- discord_sender/__main__.py
++++ discord_sender/__main__.py
+@@ -16,6 +16,6 @@
+     print("The eula was successfully accepted")
+     sys.exit(0)
+ print(
+-    "usage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails."
++    "XXusage: python -m discord_sender --accept-eula\nOnly use this if the import hook fails.XX"
+ )
+ 
+</pre></body></html>

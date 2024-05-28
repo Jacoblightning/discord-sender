@@ -14,11 +14,12 @@ class OtherUser:
     def __repr__(self):
         return f"{self.user_id}: {self.username}{('/' + self.global_name) if self.global_name else ''}"
 
-    def strict_equality_check(self, other) -> bool:  # TODO: Cover this
+    @staticmethod
+    def strict_equality_check(first, other) -> bool:  # TODO: Cover this
         try:
-            if self != other:
+            if first != other:
                 return False
-            if self.username == other.username:
+            if first.username == other.username:
                 return True
             return False
         except AttributeError:

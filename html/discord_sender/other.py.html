@@ -1,0 +1,175 @@
+<html><body><h1>discord_sender/other.py</h1>Killed 8 out of 24 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 228</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -6,7 +6,7 @@
+         global_name: str | None = None,
+         is_bot: bool = False,
+     ):
+-        self.user_id: str = user_id
++        self.user_id: str = None
+         self.username: str | None = username
+         self.is_bot = is_bot
+         self.global_name: str = global_name
+</pre><h3>Mutant 229</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -7,7 +7,7 @@
+         is_bot: bool = False,
+     ):
+         self.user_id: str = user_id
+-        self.username: str | None = username
++        self.username: str & None = username
+         self.is_bot = is_bot
+         self.global_name: str = global_name
+ 
+</pre><h3>Mutant 230</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -7,7 +7,7 @@
+         is_bot: bool = False,
+     ):
+         self.user_id: str = user_id
+-        self.username: str | None = username
++        self.username: str | None = None
+         self.is_bot = is_bot
+         self.global_name: str = global_name
+ 
+</pre><h3>Mutant 231</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -8,7 +8,7 @@
+     ):
+         self.user_id: str = user_id
+         self.username: str | None = username
+-        self.is_bot = is_bot
++        self.is_bot = None
+         self.global_name: str = global_name
+ 
+     def __repr__(self):
+</pre><h3>Mutant 232</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -9,7 +9,7 @@
+         self.user_id: str = user_id
+         self.username: str | None = username
+         self.is_bot = is_bot
+-        self.global_name: str = global_name
++        self.global_name: str = None
+ 
+     def __repr__(self):
+         return f"{self.user_id}: {self.username}{('/' + self.global_name) if self.global_name else ''}"
+</pre><h3>Mutant 233</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -12,7 +12,7 @@
+         self.global_name: str = global_name
+ 
+     def __repr__(self):
+-        return f"{self.user_id}: {self.username}{('/' + self.global_name) if self.global_name else ''}"
++        return f"{self.user_id}: {self.username}{('XX/XX' + self.global_name) if self.global_name else ''}"
+ 
+     @staticmethod
+     def strict_equality_check(first, other) -> bool:  # TODO: Cover this
+</pre><h3>Mutant 234</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -12,7 +12,7 @@
+         self.global_name: str = global_name
+ 
+     def __repr__(self):
+-        return f"{self.user_id}: {self.username}{('/' + self.global_name) if self.global_name else ''}"
++        return f"{self.user_id}: {self.username}{('/' - self.global_name) if self.global_name else ''}"
+ 
+     @staticmethod
+     def strict_equality_check(first, other) -> bool:  # TODO: Cover this
+</pre><h3>Mutant 238</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -18,7 +18,7 @@
+     def strict_equality_check(first, other) -> bool:  # TODO: Cover this
+         try:
+             if first != other:
+-                return False
++                return True
+             if first.username == other.username:
+                 return True
+             return False
+</pre><h3>Mutant 240</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -20,7 +20,7 @@
+             if first != other:
+                 return False
+             if first.username == other.username:
+-                return True
++                return False
+             return False
+         except AttributeError:
+             return False
+</pre><h3>Mutant 241</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -21,7 +21,7 @@
+                 return False
+             if first.username == other.username:
+                 return True
+-            return False
++            return True
+         except AttributeError:
+             return False
+ 
+</pre><h3>Mutant 242</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -23,7 +23,7 @@
+                 return True
+             return False
+         except AttributeError:
+-            return False
++            return True
+ 
+     def __eq__(self, other):  # TODO: Cover this
+         try:
+</pre><h3>Mutant 244</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -28,7 +28,7 @@
+     def __eq__(self, other):  # TODO: Cover this
+         try:
+             if not isinstance(other, OtherUser):
+-                return False
++                return True
+             if self.user_id != other.user_id:
+                 return False
+             if self.is_bot != other.is_bot:
+</pre><h3>Mutant 246</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -30,7 +30,7 @@
+             if not isinstance(other, OtherUser):
+                 return False
+             if self.user_id != other.user_id:
+-                return False
++                return True
+             if self.is_bot != other.is_bot:
+                 return False
+             if self.global_name != other.global_name:
+</pre><h3>Mutant 248</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -32,7 +32,7 @@
+             if self.user_id != other.user_id:
+                 return False
+             if self.is_bot != other.is_bot:
+-                return False
++                return True
+             if self.global_name != other.global_name:
+                 return False
+             return True
+</pre><h3>Mutant 250</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -34,7 +34,7 @@
+             if self.is_bot != other.is_bot:
+                 return False
+             if self.global_name != other.global_name:
+-                return False
++                return True
+             return True
+         except AttributeError:
+             return False
+</pre><h3>Mutant 252</h3><pre>--- discord_sender/other.py
++++ discord_sender/other.py
+@@ -37,5 +37,5 @@
+                 return False
+             return True
+         except AttributeError:
+-            return False
++            return True
+ 
+</pre></body></html>

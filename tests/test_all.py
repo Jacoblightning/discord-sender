@@ -96,7 +96,7 @@ class TestExceptions:
 class TestWarnings:
     def test_dms(self, user):
         with pytest.raises(discord_exceptions.InvalidCredentialsException):
-            with pytest.warns(DeprecationWarning, match= "Passing int to get_dms is Deprecated and will soon be removed"):
+            with pytest.warns(DeprecationWarning, match="Passing int to get_dms is Deprecated and will soon be removed"):
                 user.get_dms(1)
 
     def test_alert(self, user):
@@ -169,7 +169,7 @@ class TestChannels:
         chan = channel.Channel("12345", [], 3)
         assert chan.channel_type is None
         chan = channel.Channel("12345", [], 2)
-        assert chan.channel_type is "unknown"
+        assert chan.channel_type == "unknown"
 
     def test_channel_equals(self):
         chan1 = channel.Channel("12345", [], 1)
@@ -236,5 +236,11 @@ class TestDefaults:
 class TestOtheruser:
     def test_repr(self):
         user = OtherUser("12345")
+        assert repr(user) == f"{user.user_id}: {user.username}{('/' + user.global_name) if user.global_name else ''}"
+        user = OtherUser(
+            "12345",
+            "12345",
+            "12345"
+        )
         assert repr(user) == f"{user.user_id}: {user.username}{('/' + user.global_name) if user.global_name else ''}"
 

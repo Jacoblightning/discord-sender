@@ -1,0 +1,100 @@
+<html><body><h1>discord_sender/info.py</h1>Killed 3 out of 12 mutants<h2>Survived</h2>Survived mutation testing. These mutants show holes in your test suite.<h3>Mutant 216</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -6,7 +6,7 @@
+         self, *, token: str | None = None, cookie: None = None, uid: str | None = None
+     ):
+         if not token:  # Keep it until we have cookie auth
+-            raise ArgumentError("Token must be provided")
++            raise ArgumentError("XXToken must be providedXX")
+         if not (token or cookie):  # pragma: no cover
+             raise ArgumentError("either token or cookie is required")
+         self.__token: str | None = token
+</pre><h3>Mutant 219</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -8,7 +8,7 @@
+         if not token:  # Keep it until we have cookie auth
+             raise ArgumentError("Token must be provided")
+         if not (token or cookie):  # pragma: no cover
+-            raise ArgumentError("either token or cookie is required")
++            raise ArgumentError("XXeither token or cookie is requiredXX")
+         self.__token: str | None = token
+         self.__cookie: None = cookie
+         self.uid: str | None = uid
+</pre><h3>Mutant 220</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -9,7 +9,7 @@
+             raise ArgumentError("Token must be provided")
+         if not (token or cookie):  # pragma: no cover
+             raise ArgumentError("either token or cookie is required")
+-        self.__token: str | None = token
++        self.__token: str & None = token
+         self.__cookie: None = cookie
+         self.uid: str | None = uid
+         self.preferred_method: str = "token"
+</pre><h3>Mutant 221</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -9,7 +9,7 @@
+             raise ArgumentError("Token must be provided")
+         if not (token or cookie):  # pragma: no cover
+             raise ArgumentError("either token or cookie is required")
+-        self.__token: str | None = token
++        self.__token: str | None = None
+         self.__cookie: None = cookie
+         self.uid: str | None = uid
+         self.preferred_method: str = "token"
+</pre><h3>Mutant 222</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -10,7 +10,7 @@
+         if not (token or cookie):  # pragma: no cover
+             raise ArgumentError("either token or cookie is required")
+         self.__token: str | None = token
+-        self.__cookie: None = cookie
++        self.__cookie: None = None
+         self.uid: str | None = uid
+         self.preferred_method: str = "token"
+ 
+</pre><h3>Mutant 223</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -11,7 +11,7 @@
+             raise ArgumentError("either token or cookie is required")
+         self.__token: str | None = token
+         self.__cookie: None = cookie
+-        self.uid: str | None = uid
++        self.uid: str & None = uid
+         self.preferred_method: str = "token"
+ 
+     def get_token(self) -> str | None:
+</pre><h3>Mutant 224</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -11,7 +11,7 @@
+             raise ArgumentError("either token or cookie is required")
+         self.__token: str | None = token
+         self.__cookie: None = cookie
+-        self.uid: str | None = uid
++        self.uid: str | None = None
+         self.preferred_method: str = "token"
+ 
+     def get_token(self) -> str | None:
+</pre><h3>Mutant 225</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -12,7 +12,7 @@
+         self.__token: str | None = token
+         self.__cookie: None = cookie
+         self.uid: str | None = uid
+-        self.preferred_method: str = "token"
++        self.preferred_method: str = "XXtokenXX"
+ 
+     def get_token(self) -> str | None:
+         return self.__token
+</pre><h3>Mutant 226</h3><pre>--- discord_sender/info.py
++++ discord_sender/info.py
+@@ -12,7 +12,7 @@
+         self.__token: str | None = token
+         self.__cookie: None = cookie
+         self.uid: str | None = uid
+-        self.preferred_method: str = "token"
++        self.preferred_method: str = None
+ 
+     def get_token(self) -> str | None:
+         return self.__token
+</pre></body></html>

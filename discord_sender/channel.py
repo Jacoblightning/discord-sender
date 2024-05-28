@@ -4,13 +4,15 @@ from .tools import ziplist
 
 class Channel:
     def __init__(
-        self,
-        channel_id: str,
-        recipients: list[OtherUser],
-        chan_type: int = 1,
-        is_in_server: bool = False,
-        name: str | None = None,
+            self,
+            channel_id: str,
+            recipients: list[OtherUser],
+            chan_type: int = 1,
+            is_in_server: bool = False,
+            name: str | None = None,
+            parent=None
     ):
+        self.__parent = parent
         self.channel_id: str = channel_id
         self.is_in_server: bool = is_in_server
         self.recipients: list[OtherUser] = recipients
@@ -38,6 +40,9 @@ class Channel:
             return True
         except AttributeError:
             return False
+
+    def get_messages(self):
+        return self.__parent.get_messages(self.channel_id)
 
     def __eq__(self, other: object) -> bool:
         try:
